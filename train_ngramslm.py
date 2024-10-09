@@ -2,7 +2,7 @@ import glob
 import jieba
 import time
 from tqdm import tqdm
-from models import NgramsLanguageModel
+from models_collect import NgramsLanguageModel
 
 
 model = NgramsLanguageModel(ngram=2)

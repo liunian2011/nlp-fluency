@@ -43,11 +43,11 @@ sentences = [
 训练模型详见[train_ngramslm.py](https://github.com/baojunshan/nlp-fluency/blob/master/train_ngramslm.py)
 
 由于本模型使用清华摘要数据集训练，缺乏古诗文的语料，导致非白话文的部分ppl偏高，其他都比较准确，在语义的表现也不错，且不受长短句影响。
+
 ```python
 import jieba
 import time
-from models import NgramsLanguageModel
-
+from models_collect import NgramsLanguageModel
 
 start_time = time.time()
 
@@ -57,8 +57,8 @@ print(f"Loading ngrams model cost {time.time() - start_time:.3f} seconds.")
 
 for s in sentences:
     ppl = model.perplexity(
-        x=jieba.lcut(s),   # 经过切词的句子或段落
-        verbose=False,     # 是否显示详细的probability，default=False
+        x=jieba.lcut(s),  # 经过切词的句子或段落
+        verbose=False,  # 是否显示详细的probability，default=False
     )
     print(f"ppl: {ppl:.5f} # {s}")
 
@@ -87,7 +87,7 @@ print(model.perplexity(jieba.lcut(sentences[-4]), verbose=True))
 bert总体上比ngrams的方法好，albert虽然速度快，但是效果不理想
 
 ```python
-from models import MaskedBert, MaskedAlbert
+from models_collect import MaskedBert, MaskedAlbert
 
 model = MaskedAlbert.from_pretrained("/home/baojunshan/data/pretrained_models/albert_base_zh")
 
@@ -99,10 +99,10 @@ model = MaskedAlbert.from_pretrained("/home/baojunshan/data/pretrained_models/al
 
 for s in sentences:
     ppl = model.perplexity(
-        x=" ".join(s),   # 每个字空格隔开或者输入一个list
-        verbose=False,     # 是否显示详细的probability，default=False
-        temperature=1.0,   # softmax的温度调节，default=1
-        batch_size=100,    # 推理时的batch size，可根据cpu或gpu而定，default=100
+        x=" ".join(s),  # 每个字空格隔开或者输入一个list
+        verbose=False,  # 是否显示详细的probability，default=False
+        temperature=1.0,  # softmax的温度调节，default=1
+        batch_size=100,  # 推理时的batch size，可根据cpu或gpu而定，default=100
     )
     print(f"ppl: {ppl:.5f} # {s}")
 
@@ -131,7 +131,7 @@ model.perplexity(sentences[-4], verbose=True)
 GPT效果不理想，抛开结果本身，用gpt做通顺度的方法，本身存在一定问题，在预测下一个字的概率时，总是把前面所有的词当做正确的来估计，这会对结果造成偏差。
 
 ```python
-from models import GPT
+from models_collect import GPT
 
 model = GPT.from_pretrained(
     path="/home/baojunshan/data/pretrained_models/chinese_gpt2_pytorch",
@@ -141,23 +141,23 @@ model = GPT.from_pretrained(
 
 for s in sentences:
     ppl = model.perplexity(
-        x=" ".join(s),   # 每个字空格隔开或者输入一个list
-        verbose=False,     # 是否显示详细的probability，default=False
-        temperature=1.0,   # softmax的温度调节，default=1
-        batch_size=100,    # 推理时的batch size，可根据cpu或gpu而定，default=100
+        x=" ".join(s),  # 每个字空格隔开或者输入一个list
+        verbose=False,  # 是否显示详细的probability，default=False
+        temperature=1.0,  # softmax的温度调节，default=1
+        batch_size=100,  # 推理时的batch size，可根据cpu或gpu而定，default=100
     )
     print(f"ppl: {ppl:.5f} # {s}")
 
 model.perplexity(sentences[-4], verbose=True)
 
-ppl: 901.41065 # 中国人的性情是总喜欢调和折中的，譬如你说，这屋子太暗，须在这里开一个窗，大家一定不允许的。但如果你主张拆掉屋顶他们就来调和，愿意开窗了。
-ppl: 7773.85606 # 惟将终夜长开眼，报答平生未展眉
-ppl: 949.33750 # 我原以为，你身为汉朝老臣，来到阵前，面对两军将士，必有高论。没想到，竟说出如此粗鄙之语！
-ppl: 906.79251 # 人生当中成功只是一时的，失败却是主旋律，但是如何面对失败，却把人分成不同的样子，有的人会被失败击垮，有的人能够不断的爬起来继续向前，我想真正的成熟，应该不是追求完美，而是直面自己的缺憾，这才是生活的本质，罗曼罗兰说过，这个世界上只有一种真正的英雄主义，那就是认清生活的真相，并且仍然热爱它。难道向上攀 爬的那条路不是比站在顶峰更让人热血澎湃吗？
-ppl: 798.38110 # 我在树上游泳。
-ppl: 729.68857 # 我在游泳池游泳。
-ppl: 469.11313 # 我游泳在游泳池。
-ppl: 927.94576 # 尤是为了,更佳大的,念,念,李是彼,更伟大的多,你只会用这种方法解决问题吗!
+ppl: 901.41065  # 中国人的性情是总喜欢调和折中的，譬如你说，这屋子太暗，须在这里开一个窗，大家一定不允许的。但如果你主张拆掉屋顶他们就来调和，愿意开窗了。
+ppl: 7773.85606  # 惟将终夜长开眼，报答平生未展眉
+ppl: 949.33750  # 我原以为，你身为汉朝老臣，来到阵前，面对两军将士，必有高论。没想到，竟说出如此粗鄙之语！
+ppl: 906.79251  # 人生当中成功只是一时的，失败却是主旋律，但是如何面对失败，却把人分成不同的样子，有的人会被失败击垮，有的人能够不断的爬起来继续向前，我想真正的成熟，应该不是追求完美，而是直面自己的缺憾，这才是生活的本质，罗曼罗兰说过，这个世界上只有一种真正的英雄主义，那就是认清生活的真相，并且仍然热爱它。难道向上攀 爬的那条路不是比站在顶峰更让人热血澎湃吗？
+ppl: 798.38110  # 我在树上游泳。
+ppl: 729.68857  # 我在游泳池游泳。
+ppl: 469.11313  # 我游泳在游泳池。
+ppl: 927.94576  # 尤是为了,更佳大的,念,念,李是彼,更伟大的多,你只会用这种方法解决问题吗!
 我 | 0.00924169
 在 | 0.00345525
 树 | 0.00000974
@@ -165,7 +165,8 @@ ppl: 927.94576 # 尤是为了,更佳大的,念,念,李是彼,更伟大的多,你
 游 | 0.00021145
 泳 | 0.00004592
 。 | 0.00719284
-l score: -9.64093376
+l
+score: -9.64093376
 ```
 
 ## 计划

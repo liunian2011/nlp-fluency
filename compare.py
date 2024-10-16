@@ -5,7 +5,7 @@ from ner_predict import file_resolve, rouge_cal
 
 
 
-diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/GPT4 Result with K 4000 lines 0 source label 1000 summarize experiment 0-9-1/"
+diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/baseline1/"
 diver_file_paths = file_resolve.literal_folder_files(diver_folder_path)
 
 for index in range(0, 10):

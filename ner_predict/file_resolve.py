@@ -2,7 +2,7 @@ import json
 import os
 
 from . import pos_predict
-#from models_collect import perplexity_calc
+from models_collect import perplexity_calc
 
 def literal_folder_files(folder_path):
     file_paths = []
@@ -41,14 +41,8 @@ def file_content_reader(file_path):
     for word in word_entity:
         word_set = set(word.split())
         word_entity_set = word_entity_set.union(word_set)
-    print('word entity set:{}'.format(word_entity_set))
-    pos_predict.nount_statis(output_article, word_entity_set)
 
-    #困惑度
-    #ppl = perplexity_calc.ngram_model_perplexity(output_article)
-    #print(f"困惑度: {ppl:.5f}")
-
-    return input_prompt, output_article
+    return input_prompt, output_article, word_entity_set
 
 
 if __name__=='__main__':

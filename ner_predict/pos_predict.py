@@ -8,6 +8,8 @@ tagger = SequenceTagger.load('ner')
 pos_tagger = SequenceTagger.load("flair/pos-english")
 
 def nount_statis(paragram, word_entity_set=None):
+    print('word entity set:{}'.format(word_entity_set))
+
     sentence = Sentence(paragram)
     # predict ner and pos tags
     pos_tagger.predict(sentence)
@@ -35,7 +37,7 @@ def nount_statis(paragram, word_entity_set=None):
     expected_nount_set = noun_set.union(nouns_to_noun_set)
     if word_entity_set:
         word_entity_set_str = ' '.join(word_entity_set)
-        print('word_entity_set_str:{}'.format(word_entity_set_str))
+        #print('word_entity_set_str:{}'.format(word_entity_set_str))
         word_entity_to_noun_set = transfer_sentence_to_noun_setence(word_entity_set_str)
         print('word_entity_to_noun_set:{}'.format(word_entity_to_noun_set))
         expected_nount_set = noun_set.union(nouns_to_noun_set) - word_entity_to_noun_set
@@ -43,6 +45,7 @@ def nount_statis(paragram, word_entity_set=None):
     print('排除word entity后名词数:{}'.format(len(expected_nount_set)))
     percent = round(len(expected_nount_set) * 100/total_words_count, 2)
     print('排除word entity后名词数比例:{}%'.format(percent))
+    return percent
 
 
 def transfer_sentence_to_noun_setence(paragram):

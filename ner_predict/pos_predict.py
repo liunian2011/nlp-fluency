@@ -10,6 +10,7 @@ pos_tagger = SequenceTagger.load("flair/pos-english")
 def nount_statis(paragram, word_entity_set=None):
     print('word entity set:{}'.format(word_entity_set))
 
+    paragram = paragram.lower()
     sentence = Sentence(paragram)
     # predict ner and pos tags
     pos_tagger.predict(sentence)
@@ -34,6 +35,9 @@ def nount_statis(paragram, word_entity_set=None):
     total_words_count = len(paragram.split())
     print('所有单词数:{}'.format(total_words_count))
 
+    total_words_set = set(paragram.split())
+    print('所有单词去重数:{}'.format(len(total_words_set)))
+
     expected_nount_set = noun_set.union(nouns_to_noun_set)
     if word_entity_set:
         word_entity_set_str = ' '.join(word_entity_set)
@@ -45,6 +49,11 @@ def nount_statis(paragram, word_entity_set=None):
     print('排除word entity后名词数:{}'.format(len(expected_nount_set)))
     percent = round(len(expected_nount_set) * 100/total_words_count, 2)
     print('排除word entity后名词数比例:{}%'.format(percent))
+
+    percent1 = round(len(noun_set.union(nouns_to_noun_set)) * 100/total_words_count, 2)
+    print('不排除word entity后名词数比例:{}%'.format(percent1))
+    percent2 = round(len(expected_nount_set) * 100/len(total_words_set), 2)
+    print('排除word entity后名词数占比所有单词去重的比例:{}%'.format(percent2))
     return percent
 
 

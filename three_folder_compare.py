@@ -1,15 +1,48 @@
 from ner_predict import file_resolve, rouge_cal
-from models_collect import perplexity_calc
-from ner_predict import pos_predict
+from functools import cmp_to_key
 
-no_diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/baseline1 1000 words/"
+no_diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/500 words edges w examples/baseline1 500 words edges w example/"
 no_diver_file_paths = file_resolve.literal_folder_files(no_diver_folder_path)
+group0_no_diver_file_paths = no_diver_file_paths[:10]
+group1_no_diver_file_paths = no_diver_file_paths[10:20]
 
-farthest_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/ours 1000 words/"
+farthest_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/500 words edges w examples/ours 500 words edges w examples/"
 farthest_file_paths = file_resolve.literal_folder_files(farthest_folder_path)
+group0_farthest_file_paths = farthest_file_paths[:10]
+group1_farthest_file_paths = farthest_file_paths[10:20]
 
-neareast_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/baseline2 1000 words/"
+neareast_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/500 words edges w examples/baseline2 500 words edges w example/"
 neareast_file_paths = file_resolve.literal_folder_files(neareast_folder_path)
+group0_neareast_file_paths = neareast_file_paths[:10]
+group1_neareast_file_paths = neareast_file_paths[10:20]
+
+for file_path in group1_no_diver_file_paths:
+    input_prompt1, output1, word_entity_set1 = file_resolve.file_content_reader(file_path)
+    print('file path:{}, len:{}'.format(file_path, len(output1.split())))
+
+
+def func(file_path1, file_path2):
+    input_prompt1, output1, word_entity_set1 = file_resolve.file_content_reader(file_path1)
+    input_prompt2, output2, word_entity_set2 = file_resolve.file_content_reader(file_path2)
+    len1 = len(output1.split())
+    len2 = len(output2.split())
+
+    return len1 - len2
+
+group0_no_diver_file_paths = sorted(group0_no_diver_file_paths, key=cmp_to_key(func))
+group0_farthest_file_paths = sorted(group0_farthest_file_paths, key=cmp_to_key(func))
+group0_neareast_file_paths = sorted(group0_neareast_file_paths, key=cmp_to_key(func))
+group1_no_diver_file_paths = sorted(group1_no_diver_file_paths, key=cmp_to_key(func))
+group1_farthest_file_paths = sorted(group1_farthest_file_paths, key=cmp_to_key(func))
+group1_neareast_file_paths = sorted(group1_neareast_file_paths, key=cmp_to_key(func))
+no_diver_file_paths = group0_no_diver_file_paths + group1_no_diver_file_paths
+farthest_file_paths = group0_farthest_file_paths + group1_farthest_file_paths
+neareast_file_paths = group0_neareast_file_paths + group1_neareast_file_paths
+
+print('no diver sorted:{}'.format(no_diver_file_paths))
+print('farthest sorted:{}'.format(farthest_file_paths))
+print('nearest sorted:{}'.format(neareast_file_paths))
+
 
 result_collect = {}
 
@@ -29,6 +62,9 @@ for index in range(0, 20):
     nearest_file_name = nearest_file.split('/')[-1]
     print('neareast file name:{}'.format(nearest_file_name))
 
+    from models_collect import perplexity_calc
+    from ner_predict import pos_predict
+    
     print('****没有拓展的结果*****')
     input_no_diver_prompt, no_diver_output_article, word_entity_set = file_resolve.file_content_reader(no_diver_file)
     percent1 = pos_predict.nount_statis(no_diver_output_article, word_entity_set)

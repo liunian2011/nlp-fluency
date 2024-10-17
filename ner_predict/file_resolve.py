@@ -2,7 +2,7 @@ import json
 import os
 
 from . import pos_predict
-from models_collect import perplexity_calc
+#from models_collect import perplexity_calc
 
 def literal_folder_files(folder_path):
     file_paths = []
@@ -26,7 +26,7 @@ def file_content_reader(file_path):
     knowledge_entity = content_json['knowledge_entity']
     word_entity = content_json['word_entity']
     input_prompt = content_json['input_prompt']
-    output_article = content_json['output_article']
+    output_article = content_json['output_articles']
 
     #print(f"input_prompt:{input_prompt}")
     #print(f"output_article:{output_article}")

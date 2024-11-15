@@ -2,6 +2,7 @@ from flair.data import Sentence
 from flair.nn import Classifier
 from flair.splitter import SegtokSentenceSplitter
 from flair.models import SequenceTagger
+from collections import Counter
 
 # load tagger
 tagger = SequenceTagger.load('ner')
@@ -54,7 +55,7 @@ def nount_statis(paragram, word_entity_set=None):
     print('不排除word entity后名词数比例:{}%'.format(percent1))
     percent2 = round(len(expected_nount_set) * 100/len(total_words_set), 2)
     print('排除word entity后名词数占比所有单词去重的比例:{}%'.format(percent2))
-    return percent
+    return percent, total_words_set, expected_nount_set
 
 
 def transfer_sentence_to_noun_setence(paragram):

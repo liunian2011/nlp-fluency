@@ -1,24 +1,20 @@
 from ner_predict import file_resolve, rouge_cal
 from functools import cmp_to_key
 
-no_diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg/baseline1/"
+no_diver_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg_multiple_times/baseline1/"
 no_diver_file_paths = file_resolve.literal_folder_files(no_diver_folder_path)
 group0_no_diver_file_paths = no_diver_file_paths[:10]
 group1_no_diver_file_paths = no_diver_file_paths[10:20]
 
-farthest_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg/ours/"
+farthest_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg_multiple_times/ours/"
 farthest_file_paths = file_resolve.literal_folder_files(farthest_folder_path)
 group0_farthest_file_paths = farthest_file_paths[:10]
 group1_farthest_file_paths = farthest_file_paths[10:20]
 
-neareast_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg/baseline2/"
+neareast_folder_path = "/Users/liunian/Downloads/personal/论文相关/实验/clean_kg_multiple_times/baseline2/"
 neareast_file_paths = file_resolve.literal_folder_files(neareast_folder_path)
 group0_neareast_file_paths = neareast_file_paths[:10]
 group1_neareast_file_paths = neareast_file_paths[10:20]
-
-for file_path in group1_no_diver_file_paths:
-    input_prompt1, output1, word_entity_set1 = file_resolve.file_content_reader(file_path)
-    print('file path:{}, len:{}'.format(file_path, len(output1.split())))
 
 
 def func(file_path1, file_path2):
@@ -46,7 +42,14 @@ print('nearest sorted:{}'.format(neareast_file_paths))
 
 result_collect = {}
 
-for index in range(0, 20):
+no_diver_total_words_set = set()
+no_diver_expected_nount_set = set()
+farthest_total_words_set = set()
+farthest_expected_nount_set = set()
+nearest_total_words_set = set()
+nearest_expected_nount_set = set()
+
+for index in range(0, 10):
     print('=='*20)
     print(f'index:{index}')
     result = {}
@@ -67,27 +70,35 @@ for index in range(0, 20):
     
     print('****没有拓展的结果*****')
     input_no_diver_prompt, no_diver_output_article, word_entity_set = file_resolve.file_content_reader(no_diver_file)
-    percent1 = pos_predict.nount_statis(no_diver_output_article, word_entity_set)
-    ppl1 = perplexity_calc.ngram_model_perplexity(no_diver_output_article) #困惑度
-    print(f"困惑度: {ppl1:.5f}")
-    result['percent1'] = percent1
-    result['ppl1'] = ppl1
+    percent1, total_words_set1, expected_nount_set1 = pos_predict.nount_statis(no_diver_output_article, word_entity_set)
+    #ppl1 = perplexity_calc.ngram_model_perplexity(no_diver_output_article) #困惑度
+    #print(f"困惑度: {ppl1:.5f}")
+    #result['percent1'] = percent1
+    #result['ppl1'] = ppl1
+    no_diver_total_words_set = no_diver_total_words_set.union(total_words_set1)
+    no_diver_expected_nount_set = no_diver_expected_nount_set.union(expected_nount_set1)
+    print('no diver total len:{}'.format(len(no_diver_total_words_set)))
+    print('no diver noun len:{}'.format(len(no_diver_expected_nount_set)))
 
     print('****拓展后最远端的结果*****')
     input_diver_prompt, diver_output_article, word_entity_set = file_resolve.file_content_reader(farthest_file)
-    percent2 = pos_predict.nount_statis(diver_output_article, word_entity_set)
-    ppl2 = perplexity_calc.ngram_model_perplexity(diver_output_article) #困惑度
-    print(f"困惑度: {ppl2:.5f}")
-    result['percent2'] = percent2
-    result['ppl2'] = ppl2
+    percent2,total_words_set2, expected_nount_set2 = pos_predict.nount_statis(diver_output_article, word_entity_set)
+    #ppl2 = perplexity_calc.ngram_model_perplexity(diver_output_article) #困惑度
+    #print(f"困惑度: {ppl2:.5f}")
+    #result['percent2'] = percent2
+    #result['ppl2'] = ppl2
+    farthest_total_words_set = farthest_total_words_set.union(total_words_set2)
+    farthest_expected_nount_set = farthest_expected_nount_set.union(expected_nount_set2)
 
     print('****拓展后最近邻的结果*****')
     nearest_input_prompt, nearest_output_article, word_entity_set = file_resolve.file_content_reader(nearest_file)
-    percent3 = pos_predict.nount_statis(nearest_output_article, word_entity_set)
-    ppl3 = perplexity_calc.ngram_model_perplexity(nearest_output_article) #困惑度
-    print(f"困惑度: {ppl3:.5f}")
-    result['percent3'] = percent3
-    result['ppl3'] = ppl3
+    percent3, total_words_set3, expected_nount_set3 = pos_predict.nount_statis(nearest_output_article, word_entity_set)
+    #ppl3 = perplexity_calc.ngram_model_perplexity(nearest_output_article) #困惑度
+    #print(f"困惑度: {ppl3:.5f}")
+    #result['percent3'] = percent3
+    #result['ppl3'] = ppl3
+    nearest_total_words_set = nearest_total_words_set.union(total_words_set3)
+    nearest_expected_nount_set = nearest_expected_nount_set.union(expected_nount_set3)
 
     rouge_scores = rouge_cal.cal(diver_output_article, no_diver_output_article)
     print(f'没有拓展与最远端的rouge-l scores:{rouge_scores}')
@@ -102,6 +113,20 @@ for index in range(0, 20):
     result['rouge3'] = rouge_scores3
 
     result_collect[index] = result
+
+
+
+print('\n=======扩展平均值=========')
+print('base 全部union单词数：{}'.format(len(no_diver_total_words_set)))
+print('base 全部union名词数：{}'.format(len(no_diver_expected_nount_set)))
+print('base 名词比例:{}'.format(len(no_diver_expected_nount_set) * 100/len(no_diver_total_words_set)))
+print('farthest 全部union单词数：{}'.format(len(farthest_total_words_set)))
+print('farthest 全部union名词数：{}'.format(len(farthest_expected_nount_set)))
+print('farthest 名词比例:{}'.format(len(farthest_expected_nount_set) * 100/len(farthest_total_words_set)))
+print('nearest 全部union单词数：{}'.format(len(nearest_total_words_set)))
+print('nearest 全部union名词数：{}'.format(len(nearest_expected_nount_set)))
+print('nearest 名词比例:{}'.format(len(nearest_expected_nount_set) * 100/len(nearest_total_words_set)))
+
 
 group0_percent1_list = []
 group0_percent2_list = []

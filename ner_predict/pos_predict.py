@@ -5,7 +5,7 @@ from flair.models import SequenceTagger
 from collections import Counter
 
 # load tagger
-tagger = SequenceTagger.load('ner')
+#tagger = SequenceTagger.load('ner')
 pos_tagger = SequenceTagger.load("flair/pos-english")
 
 def nount_statis(paragram, word_entity_set=None):

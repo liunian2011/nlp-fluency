@@ -1,1 +1,1 @@
-{"corpus_length": 428706846, "token_count": 1690427, "sentence_length": 100, "stop_words": ["!", "\uff1f", "\uff01", ".", ". ", "?", "\u3002", "##", "\\u0022\\u005c\\u0075\\u0033\\u0030\\u0030\\u0032\\u0022", "\n\n"], "ngram": 2}
+{"corpus_length": 428706846, "token_count": 1690427, "sentence_length": 200, "stop_words": ["!", "\uff1f", "\uff01", ".", ". ", "?", "\u3002", "##", "\\u0022\\u005c\\u0075\\u0033\\u0030\\u0030\\u0032\\u0022", "\n\n"], "ngram": 2}

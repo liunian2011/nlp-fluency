@@ -4,10 +4,21 @@ import os
 from . import pos_predict
 #from models_collect import perplexity_calc
 
+def literal_folder(parent_folder_path):
+    child_folders = []
+    for item in os.scandir(parent_folder_path):
+        if not item.name.startswith('.DS_Store'):
+            child_folders.append(item.path)
+
+    return child_folders
+
+
+
 def literal_folder_files(folder_path):
     file_paths = []
     for item in os.scandir(folder_path):
-        file_paths.append(item.path)
+        if not item.name.startswith('.DS_Store'):
+            file_paths.append(item.path)
 
     file_paths.sort()
     for file_path in file_paths:

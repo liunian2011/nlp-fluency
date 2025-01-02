@@ -17,7 +17,8 @@ def gen_fact_test():
     #factor_exp_entrance.generate_all_fact_flow()
     #factor_exp_entrance.copy_file_result_flow()
     #factor_exp_entrance.find_not_consistent_flow()
-    factor_exp_entrance.collect_all_top3_top1_flow()
+    #factor_exp_entrance.collect_all_top3_top1_flow()
+    factor_exp_entrance.copy_excel_result_flow()
 
 
 

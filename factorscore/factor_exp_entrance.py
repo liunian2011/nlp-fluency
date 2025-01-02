@@ -38,14 +38,12 @@ def add_input_prompt_data():
 def generate_fact_flow():
     resolver = Xls_resolve(excel_file_path)
     output_article_index = 8
-    output_article_list = resolver.read_column_data(output_article_index, start_row_index=1031)
+    output_article_list = resolver.read_column_data(output_article_index, start_row_index=1032)
 
     facts_array = []
-    i = 0
     for article in output_article_list:
         facts = generate_fact(article)
         facts_array.append(facts)
-        i += 1
     resolver.save_column_data(9, facts_array, start_row_index=1031)
 
 
@@ -110,6 +108,15 @@ def copy_file_result_flow():
     left_result = left_resolver.get_left_result(id_list)
     right_resolver.write_right_result(id_list, left_result)
 
+def copy_excel_result_flow():
+    left_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore-wjw-redo1227.xlsx"
+    right_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln.xlsx"
+    left_resolver = Xls_resolve(left_file_path)
+    right_resolver = Xls_resolve(right_file_path)
+
+    id_list = [104,109,114,148,164,334,364,394,429,459,462,491,518,558,580,595,664,680,684,716,750]
+    left_result = left_resolver.get_left_result(id_list)
+    right_resolver.write_right_result(id_list, left_result)
 
 def find_not_consistent_flow():
     right_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln.xlsx"

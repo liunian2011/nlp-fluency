@@ -24,7 +24,7 @@ class Xls_resolve(object):
         sheet = workbook.worksheets[0]
 
         row_number = sheet.max_row
-        print(f'table row size:{row_number}')
+        print(f'table max row size:{row_number}')
         print(f'column data size:{len(column_data)}')
         for i in range(len(column_data)):
             sheet.cell(row=start_row_index+i, column=column_index+1).value = column_data[i]
@@ -138,6 +138,8 @@ class Xls_resolve(object):
             row[14].alignment = Alignment(wrapText=True)
             row[15].value = row_result[5]
             row[15].number_format = '0%'
+            #已重跑
+            row[17].value = 1
         workbook.save(self.path)
 
     def copy_cell_value(self):

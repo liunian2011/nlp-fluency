@@ -109,12 +109,15 @@ def copy_file_result_flow():
     right_resolver.write_right_result(id_list, left_result)
 
 def copy_excel_result_flow():
-    left_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore-wjw-redo1227.xlsx"
-    right_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln.xlsx"
+    left_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln_json_yp.xlsx"
+    right_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln_0109.xlsx"
     left_resolver = Xls_resolve(left_file_path)
     right_resolver = Xls_resolve(right_file_path)
 
-    id_list = [104,109,114,148,164,334,364,394,429,459,462,491,518,558,580,595,664,680,684,716,750]
+    #id_list = [104,109,114,148,164,334,364,394,429,459,462,491,518,558,580,595,664,680,684,716,750]
+    #id_list = [3,7,27,47,51,73,110,134,165,169,171,291,323,359,364,383,392,459,460,462,509,517,523,535,566,595,596,604,609,610,636,659,668,677,681,689,696]
+
+    id_list = [699,705,706,716,741,759,805,806,818,819,825,836,865,876,885,901,902,905,906,910,918,930,942,949,958,967,972,974,978,982,983,988,992,998,1004,1010,1018,1029]
     left_result = left_resolver.get_left_result(id_list)
     right_resolver.write_right_result(id_list, left_result)
 

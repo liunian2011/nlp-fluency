@@ -186,7 +186,7 @@ class Xls_resolve(object):
             path_l = ast.literal_eval(path)
             length = len(path_l)
             print(f' len: {length}')
-            rows[row_index][18].value = length
+            rows[row_index][14].value = length
         workbook.save(self.path)
 
 
@@ -196,9 +196,9 @@ if __name__ == '__main__':
     #print(column_list)
     #resolver.test()
 
-    resolver = Xls_resolve("/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln.xlsx")
+    resolver = Xls_resolve("/Users/liunian/Downloads/personal/论文相关/医疗实验/另一组实验/another_factscore_0214.xlsx")
     #resolver.copy_cell_value()
     #result_list = resolver.get_left_result([483])
     #resolver.write_right_result([486], result_list)
-    #resolver.write_path_length()
-    resolver.get_all_id_value()
+    resolver.write_path_length()
+    #resolver.get_all_id_value()

@@ -43,5 +43,5 @@ if __name__ == '__main__':
     folder = "/Users/liunian/Downloads/personal/论文相关/医疗实验/1-20/1-amphibian"
     #merge_top3(folder)
     #merge_top1(folder)
-    parent_folder = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore/12.11/"
+    parent_folder = "/Users/liunian/Downloads/personal/论文相关/医疗实验/另一组实验/事实材料/0211-wjw/"
     gen_all_merged_pdf(parent_folder)

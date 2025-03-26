@@ -4,20 +4,20 @@ from ner_predict import file_resolve
 from .Xls_resolve import Xls_resolve
 from .fact_gen import generate_fact
 
-factscore_folder = "/Users/liunian/Downloads/personal/论文相关/医疗实验/GPT4_generation_experiment_select_long_path/"
+factscore_folder = "/Users/liunian/Downloads/personal/论文相关/医疗实验/另一组实验/GPT4_generation_experiment_1_6_paths/"
 factscore_json_file_paths = file_resolve.literal_folder_files(factscore_folder)
 
 test_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/GPT4_generation_experiment_new/GPT4 Generate Result from amphibian to cell function path number 0 experiment number 0.json"
 file_resolve.json_content_reader(test_file_path)
 
-excel_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/factscore_ln.xlsx"
+excel_file_path = "/Users/liunian/Downloads/personal/论文相关/医疗实验/另一组实验/another_factscore_0206.xlsx"
 
 def resolve_json_files():
     all_target_list = []
     for index in range(len(factscore_json_file_paths)):
         file_path = factscore_json_file_paths[index]
         node = file_resolve.json_content_reader(file_path)
-        #node['record_num'] = index+1
+        node['record_num'] = index+1
 
         all_target_list.append(node)
 
@@ -38,13 +38,13 @@ def add_input_prompt_data():
 def generate_fact_flow():
     resolver = Xls_resolve(excel_file_path)
     output_article_index = 8
-    output_article_list = resolver.read_column_data(output_article_index, start_row_index=1032)
+    output_article_list = resolver.read_column_data(output_article_index, start_row_index=1)
 
     facts_array = []
     for article in output_article_list:
         facts = generate_fact(article)
         facts_array.append(facts)
-    resolver.save_column_data(9, facts_array, start_row_index=1031)
+    resolver.save_column_data(9, facts_array, start_row_index=1)
 
 
 def generate_cell_fact_flow():

@@ -1,6 +1,6 @@
 
 from collections import Counter
-import jieba
+#import jieba
 
 def main():
     with open('/Users/liunian/Downloads/personal/论文相关/实验/abstract.txt', encoding="utf-8") as f:

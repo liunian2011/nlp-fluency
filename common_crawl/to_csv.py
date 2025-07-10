@@ -9,7 +9,7 @@ def transfer_to_csv(file_path):
         for item in data:
             domain = item[0]
             count = item[1]
-            line = f"{domain},{count}\n"
+            line = f"{domain},{count}"
             print(line)
 
 def merge_csvs(path1, path2):
@@ -27,5 +27,6 @@ def merge_csvs(path1, path2):
 
 
 if __name__ == "__main__":
-    path = '/home/zjlab/code/nlp/fineweb_result.txt'
+    #path = '/home/zjlab/code/nlp/professional_eval/top_most_common.txt'
+    path = '/Users/liunian/Downloads/codes/python/nlp-fluency/common_crawl/websearch_result/result.txt'
     transfer_to_csv(path)

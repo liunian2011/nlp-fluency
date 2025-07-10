@@ -34,8 +34,20 @@ Here are the set of search results:
 Your answer MUST be written in the same language as the user question, For example, if the user question is written in chinese, 你的回答也应该使用中文, if user's question is written in english, your answer should be written in english too. And here is the user's INITIAL_QUERY:{content}
 """
 
+
+professional_prompt_template = '''
+作为一名专业的地学科研工作者，以学术研究的专业角度，结合其内容定位、学术权威性、资源质量及学科相关性综合分析以下网站的地学专业性，抽取网站的部分内容并给出一个得分(满分10分)。
+需要确保评分理由符合地学专业的相关性，比如是是否涉及地理信息系统、气候研究、地质学等分支领域。此外，如果网站提供的数据或研究被学术机构引用，如搜索结果中提到的AGU期刊被NASA引用，则权威性更高，如果网站没有学术深度，缺乏地学理论支撑，则权威性低，如果网站更偏向工程应用或者商业信息，缺乏地学专业性，则权威性低。但如果没有相关信息，可能需要基于常识判断。
+严格按照这个格式来展示各网站的得分：[网站]-[得分]
+网站列表:
+{domain}
+'''
+
+
 url = 'http://10.200.100.95:30638/llm/generate'
 headers = {'Content-Type': 'application/json'}
+
+
 
 data_str = """
 {
@@ -71,7 +83,6 @@ def request(input:str):
     code = res_json['code']
     res_data = res_json['data']
     output = res_data['output']
-    #print(output)
     return code, output
 
 
@@ -79,7 +90,26 @@ def compose_prompt(question, rag_retrievel_result):
     prompt = fusion_prompt_template.format(content=question, ragReference=rag_retrievel_result)
     return prompt
 
+def compose_pro_prompt(domain_list):
+    domain_str = ','.join(domain_list)
+    answer = professional_prompt_template.format(domain=domain_str)
+    return answer
+
 if __name__ == '__main__':
-    input_prompt = """中国最大的省是哪个"""
-    request(input_prompt)
+    #input_prompt = """中国最大的省是哪个"""
+    input_prompt = '''作为一名专业的地学科研工作者，以学术研究的专业角度，结合其内容定位、学术权威性、资源质量及学科相关性综合分析以下网站的地学专业性，抽取网站的部分内容并给出一个得分(满分10分)。
+需要确保评分理由符合地学专业的相关性，比如是是否涉及地理信息系统、气候研究、地质学等分支领域。此外，如果网站提供的数据或研究被学术机构引用，如搜索结果中提到的AGU期刊被NASA引用，则权威性更高，如果网站没有学术深度，缺乏地学理论支撑，则权威性低，如果网站更偏向工程应用或者商业信息，缺乏地学专业性，则权威性低。但如果没有相关信息，可能需要基于常识判断。
+严格按照这个格式来展示各网站的得分：[网站]-[得分]
+网站列表:
+geoscienceworld.org
+usgs.gov
+usda.gov
+blogspot.com
+climate.gov
+confex.com
+wikipedia.org
+wordpress.com
+noaa.gov
+environmental-expert.com'''
+    print(request(input_prompt))
 

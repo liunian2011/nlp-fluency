@@ -146,8 +146,6 @@ def read_jsonl_in_batches(file_path, batch_size=1000):
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             count += 1
-            if count < 1011101:
-                continue
 
             try:
                 batch.append(json.loads(line.strip()))
@@ -161,13 +159,32 @@ def read_jsonl_in_batches(file_path, batch_size=1000):
             yield batch
 
 
+def process_data(data):
+    print(f'data:{data}')
+    dataset = data['data_set']
+    metadata = data['meta_data']
+    if dataset == 'dclm':
+        url = metadata['warc_target_uri']
+    elif dataset == 'fineweb':
+        url = metadata['url']
+    else:
+        url = None
+    domain = extract_domain(url)
+    metadata['domain'] = domain
+    pr_values = pagerank.get_values([domain])
+    print(f'pr value lenth:{len(pr_values)}')
+    print(f'pr value:{pr_values}')
+    metadata['page_rank_result'] = pr_values[0]
+
+    return data
+
 def process_batch(data):
     """
     处理批量JSON对象的示例函数
     可以根据实际需求修改
     """
     print(f'data length:{len(data)}')
-    #print(f'data:{data}')
+    print(f'data:{data}')
     domain_list = []
     for item in data:
         dataset = item['data_set']
@@ -198,13 +215,14 @@ def process_batch(data):
 
     return data
 
-def parallel_process_jsonl(input_file, output_file, batch_size=100, workers=1):
+def parallel_process_jsonl(input_file, output_file, batch_size=100, workers=2):
     """并行处理JSONL文件"""
     with open(output_file, 'a', encoding='utf-8') as outfile:
         with Pool(workers) as pool:
             for batch in read_jsonl_in_batches(input_file, batch_size):
                 #processed_batch = pool.map(process_data, batch)
                 processed_batch = process_batch(batch)
+                print(f'###processed batch size:{len(processed_batch)}')
                 for item in processed_batch:
                     outfile.write(json.dumps(item, ensure_ascii=False) + '\n')
 
@@ -214,8 +232,8 @@ if __name__ == "__main__":
     file_path2 = '/mnt/geogpt/duyuxuan/file_web/fineweb.jsonl'
     domain_score_path = '/mnt/geogpt/duyuxuan/file_web/final_pro_eval.json'
     #cal_token_with_filter(file_path, domain_score_path)
-    file_path_rewrite = '/mnt/geogpt/duyuxuan/file_web/pagerank_output/dclm_pr.jsonl'
-    #parallel_process_jsonl(file_path, file_path_rewrite)
+    file_path_rewrite = '/mnt/geogpt/duyuxuan/file_web/pagerank_output/fineweb_pr.jsonl'
+    parallel_process_jsonl(file_path2, file_path_rewrite)
 
-    top = count_domain()
-    print(top)
+    #top = count_domain()
+    #print(top)

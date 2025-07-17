@@ -2,15 +2,21 @@ import time
 import openai
 from openai import OpenAI
 
+Gpt4_Model = 'gpt-4'
+Gpt4o_model = 'gpt-4o'
+DeepSeek_Model = 'deepseek-chat'
+Claude_Model = 'claude-3-7-sonnet-20250219'
+Plam_Model = 'PaLM-2'
+
 client = OpenAI(api_key="sk-Avu1NSpZvuMReDJJ27BcC6Ff4b024e1c83Ef4cBa52D69e80",
                 base_url="https://openai.sohoyo.io/v1")
 
 
 def retry(max_retries=3, delay=5, allowed_exceptions=(Exception,)):
     """
-    :param max_attempts: 最大尝试次数
+    :param max_retries: 最大尝试次数
     :param delay: 每次重试间隔秒数
-    :param exceptions: 哪些异常会触发重试
+    :param allowed_exceptions: 哪些异常会触发重试
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -24,6 +30,8 @@ def retry(max_retries=3, delay=5, allowed_exceptions=(Exception,)):
                     if retries == max_retries:
                         print(f'重试{retries}次依然失败，跳过')  # 如果达到最大重试次数，放弃执行
                     time.sleep(delay)
+                except Exception as ex:
+                    print(f'执行遇到错误：{ex}')
         return wrapper
     return decorator
 
@@ -33,7 +41,7 @@ def chart_with_gpt(input):
     chat_completion = None
     try:
         chat_completion = client.chat.completions.create(
-            model="gpt-4o",
+            model=Claude_Model,
             messages=[{"role": "user", "content": input}]
         )
     except openai.RateLimitError:
@@ -55,8 +63,7 @@ def chart_with_gpt(input):
 
 
 if __name__ == '__main__':
-    # input_prompt = """what is the capital of China?"""
-    input_prompt = """
+    input_prompt = r"""
     # Factuality Assessment Task
 Based on the information provided in the article section, evaluate the factuality of the following statements, DO NOT refer to any external knowledge or information beyond the article.
 Respond with "Supported", or "Not-supported" or "Not-mentioned" , provide explanatory reasons in the following format:
@@ -173,5 +180,6 @@ Classification links to manipulation of cell function.
 Systematic classification maps the landscape of cellular functions.
 Classification informs health and disease implications.
     """
+    input_prompt = """what is the capital of China?"""
     output = chart_with_gpt(input_prompt)
     print(f'output:{output}')

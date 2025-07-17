@@ -4,6 +4,11 @@ __pycache__/
 *$py.class
 
 *.jsonl
+*.bin
+*.csv
+*.txt
+
+contexts/
 
 # C extensions
 *.so

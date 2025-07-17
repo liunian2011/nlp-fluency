@@ -1,5 +1,6 @@
 import llm_api
 import json
+import json5
 
 get_geo_entities_prompt = '''
 # General Instructions
@@ -43,7 +44,11 @@ def get_geo_entities(orig_text):
     input_prompt = get_geo_entities_prompt.format(input_text = orig_text)
     llm_answer = llm_api.chart_with_gpt(input_prompt)
     if llm_answer:
-        geo_entities = json.loads(llm_answer.strip().replace("```json", "").replace("```", "").strip())
+        try:
+            geo_entities = json5.loads(llm_answer.strip().replace("```json", "").replace("```", "").strip())
+        except json.decoder.JSONDecodeError as e:
+            print(f'llm answer can not json load. answer:{llm_answer}, 错误信息:{e.doc}')
+
     return geo_entities
 
 if __name__ == '__main__':
@@ -52,3 +57,4 @@ if __name__ == '__main__':
     print(f'geo entities:{output}')
     output_j = json.loads(output)
     print(output_j['geoscience_terms'])
+

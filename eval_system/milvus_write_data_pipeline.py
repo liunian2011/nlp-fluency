@@ -4,6 +4,8 @@ import milvus_db_manage
 #geo_corpus_file_path = '/Users/liunian/Downloads/personal/之江实验室/DDE/大模型/测评体系/原始语料/geo-oa-paper-2000.jsonl'
 geo_wiki_corpus_file_path = '/Users/liunian/Downloads/personal/之江实验室/DDE/大模型/测评体系/原始语料/v0.9-20250616-43B-2000.jsonl'
 geo_oa_paper_corpus_file_path = '/Users/liunian/Downloads/personal/之江实验室/DDE/大模型/测评体系/原始语料/geo-oa-paper-2000.jsonl'
+chunk_size = 1000
+
 
 def read_dataset(file_path):
     dataset = []
@@ -22,6 +24,57 @@ def start_emb_text_into_milvus(input_file, limit_size=10):
 
     print(f'corpus count:{len(corpus_sub_list)}')
     milvus_db_manage.insert_text_to_milvus(corpus_sub_list)
+
+
+def read_jsonl_in_chunks(file_path, chunk_size=1000):
+    """
+    逐块读取大型JSONL文件的生成器函数
+
+    参数:
+        file_path: JSONL文件的路径
+        chunk_size: 每个块包含的行数（记录数）
+
+    返回:
+        生成器，每次 yield 一个包含 chunk_size 条记录的列表
+    """
+    current_chunk = []
+    with open(file_path, 'r', encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            # 跳过空行
+            if not line.strip():
+                continue
+            try:
+                data = json.loads(line)
+                current_chunk.append(data)
+            except json.JSONDecodeError as e:
+                print(f"Warning: 在第 {line_num} 行解析JSON出错: {e}")
+                # 可以选择跳过错误行或记录错误
+                continue
+
+            # 当块达到预定大小时，yield 并重置块
+            if len(current_chunk) >= chunk_size:
+                yield current_chunk
+                current_chunk = [] # 重置当前块
+
+        # 文件读取结束后，yield 最后不足 chunk_size 的剩余数据
+        if current_chunk:
+            yield current_chunk
+
+
+
+
+
+def start_insert_huge_file_into_milvus(input_file):
+    corpus_list = []
+    for chunk_id, chunk in enumerate(read_jsonl_in_chunks(input_file, chunk_size)):
+        print(f"正在处理第 {chunk_id} 个块，包含 {len(chunk)} 条记录...")
+
+        for line_json in chunk:
+            text = line_json['text']
+            corpus_list.append(text)
+
+        milvus_db_manage.insert_text_to_milvus(corpus_list)
+        corpus_list = []
 
 
 def search_text_list():

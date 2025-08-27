@@ -2,16 +2,21 @@ import random
 
 
 """
-book_neg	    27927
-book_pos	    200000
-oa_pos	        100000
-scihub_pos      200000
-scihub_neg      28255
-just_moment_neg	2000
-temporary_neg	2000
+oa_pos_train_data.txt  271821
 
-pos_total:      504171
-neg_total:      56018
+scihub_pos_train_data.txt  500000
+scihub_neg_train_data.txt  27927
+
+book_pos_train_data.txt  8163
+book_neg_train_data.txt  30868
+
+just_moment_neg_train_data.txt  5000
+temporary_unavailable_neg_train_data.txt  5000  
+
+wiki_neg_train_data.txt 300000
+
+pos_total:      779984
+neg_total:      368795
 """
 
 
@@ -35,7 +40,7 @@ def get_file_lines(file_path):
 
 """
 =====方案1：=======
-neg: book + scihub + [just_moment 和 temporary采样]
+neg: book + scihub + [just_moment 和 temporary采样] + wiki 
 pos: book + scihub + oa 
 
 正负比约 
@@ -46,13 +51,15 @@ pos: book + scihub + oa
 neg_lines = []
 book_neg_lines = get_file_lines('book_neg_train_data.txt')
 scihub_neg_lines = get_file_lines('scihub_neg_train_data.txt')
-just_moment_neg_lines = get_file_lines('just_moment_neg_train_data_2000.txt')
-temporary_neg_lines = get_file_lines('temporary_unavailable_neg_train_data_2000.txt')
+just_moment_neg_lines = get_file_lines('just_moment_neg_train_data.txt')
+temporary_neg_lines = get_file_lines('temporary_unavailable_neg_train_data.txt')
+wiki_neg_lines = get_file_lines('wiki_neg_train_data.txt')
 
 neg_lines.extend(book_neg_lines)
 neg_lines.extend(scihub_neg_lines)
 neg_lines.extend(just_moment_neg_lines)
 neg_lines.extend(temporary_neg_lines)
+neg_lines.extend(wiki_neg_lines)
 
 train_neg_lines, eval_neg_lines = split_train_valid(neg_lines)
 print(f'反例数据: 训练集{len(train_neg_lines)}条; 验证集{len(eval_neg_lines)}条')
@@ -60,8 +67,8 @@ print(f'反例数据: 训练集{len(train_neg_lines)}条; 验证集{len(eval_neg
 # 正例
 pos_lines = []
 
-book_pos_lines = get_file_lines('book_pos_train_data_200000.txt')
-oa_pos_lines = get_file_lines('oa_pos_train_data_100000.txt')
+book_pos_lines = get_file_lines('book_pos_train_data.txt')
+oa_pos_lines = get_file_lines('oa_pos_train_data.txt')
 scihub_pos_lines = get_file_lines('scihub_pos_train_data.txt')
 
 pos_lines.extend(book_pos_lines)

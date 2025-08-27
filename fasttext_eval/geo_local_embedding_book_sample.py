@@ -123,9 +123,11 @@ for text in to_judge_text_list:
     # 编码并归一化
     text_vector = model.encode([text], normalize_embeddings=True).astype(np.float32)
 
+    print(f"text vector shaple:{text_vector.shape}")
     # 相似度搜索
-    _, geo_sim = geo_index.search(text_vector, 1)
-    _, non_geo_sim = non_geo_index.search(text_vector, 1)
+    distance1, geo_sim = geo_index.search(text_vector, 1)
+    distance2, non_geo_sim = non_geo_index.search(text_vector, 1)
+    print(f"distance1:{distance1}, {geo_index.ntotal}, distance2:{distance2}, {non_geo_index.ntotal}")
 
     if geo_sim[0][0] > non_geo_sim[0][0]:
         print(f"{i}: 判断结果：地学. Geo similarity: {geo_sim[0][0]:.4f}, Non-geo similarity: {non_geo_sim[0][0]:.4f}")

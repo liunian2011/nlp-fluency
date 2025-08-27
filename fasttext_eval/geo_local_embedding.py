@@ -83,14 +83,16 @@ for text in to_judge_text_list:
 
     # 编码并归一化
     text_vector = model.encode([text], normalize_embeddings=True).astype(np.float32)
+    print(f"text vector shaple:{text_vector.shape}")
 
     # 相似度搜索
-    _, geo_sim = geo_index.search(text_vector, 1)
-    _, non_geo_sim = non_geo_index.search(text_vector, 1)
-
+    distance1, geo_sim = geo_index.search(text_vector, 3)
+    distance2, non_geo_sim = non_geo_index.search(text_vector, 3)
+    print(f"distance1:{distance1}, {geo_index.ntotal}, geo_sim:{geo_sim}, distance2:{distance2}, {non_geo_index.ntotal}, non_geo_sim:{non_geo_sim}")
     print(f"Geo similarity: {geo_sim[0][0]:.4f}")
     print(f"Non-geo similarity: {non_geo_sim[0][0]:.4f}")
 
+    #该判断方法有误，应该判断distance1[0][0]和distance2[0][0]
     if geo_sim[0][0] > non_geo_sim[0][0]:
         print("判断结果：地学")
     else:

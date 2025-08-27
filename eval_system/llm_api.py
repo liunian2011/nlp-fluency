@@ -41,7 +41,7 @@ def chart_with_gpt(input):
     chat_completion = None
     try:
         chat_completion = client.chat.completions.create(
-            model=Claude_Model,
+            model=Gpt4o_model,
             messages=[{"role": "user", "content": input}]
         )
     except openai.RateLimitError:

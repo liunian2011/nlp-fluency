@@ -24,11 +24,11 @@ print(f'non geo example len:{len(non_geo_examples)}')
 # 编码示例
 geo_vectors = model.encode(geo_examples, normalize_embeddings=True)
 non_geo_vectors = model.encode(non_geo_examples, normalize_embeddings=True)
-np.save('./emb_big_data/geo_vectors.npy', geo_vectors)  # 保存单个数组
-np.save('./emb_big_data/non_geo_vectors.npy', non_geo_vectors)  # 保存单个数组
+np.save('./emb_data/geo_vectors.npy', geo_vectors)  # 保存单个数组
+np.save('./emb_data/non_geo_vectors.npy', non_geo_vectors)  # 保存单个数组
 
-# geo_vectors = np.load('./emb_data/geo_vectors.npy')
-# non_geo_vectors = np.load('./emb_data/non_geo_vectors.npy')
+geo_vectors = np.load('./emb_data/geo_vectors.npy')
+non_geo_vectors = np.load('./emb_data/non_geo_vectors.npy')
 
 # 维度自动取自向量 shape
 dimension = geo_vectors.shape[1]
@@ -62,10 +62,12 @@ for judge_case in to_judge_case_list:
     # 编码并归一化
     text_vector = model.encode([text], normalize_embeddings=True).astype(np.float32)
 
+    print(f"text vector shaple:{text_vector.shape}")
     # 相似度搜索
-    _, geo_sim = geo_index.search(text_vector, 1)
-    _, non_geo_sim = non_geo_index.search(text_vector, 1)
+    distance1, geo_sim = geo_index.search(text_vector, 1)
+    distance2, non_geo_sim = non_geo_index.search(text_vector, 1)
 
+    print(f"distance1:{distance1}, {geo_index.ntotal}, distance2:{distance2}, {non_geo_index.ntotal}")
     if geo_sim[0][0] > non_geo_sim[0][0]:
         print(f"{i}: 判断结果：地学. Geo similarity: {geo_sim[0][0]:.4f}, Non-geo similarity: {non_geo_sim[0][0]:.4f}")
         judge_output = 1

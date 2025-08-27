@@ -9,7 +9,9 @@ __pycache__/
 *.txt
 
 contexts/
-
+results/
+geo_store/
+dbscan_test/
 # C extensions
 *.so
 *.DS_Store

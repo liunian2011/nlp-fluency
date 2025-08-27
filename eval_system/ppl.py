@@ -5,12 +5,12 @@ from accelerate.test_utils.testing import get_backend
 
 device, _, _ = get_backend() # automatically detects the underlying device type (CUDA, CPU, XPU, MPS, etc.)
 model_id = "openai-community/gpt2-large"
-model = GPT2LMHeadModel.from_pretrained(model_id).to(device)
-tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
+#model = GPT2LMHeadModel.from_pretrained(model_id).to(device)
+#tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
 
 
-#model = GPT2LMHeadModel.from_pretrained("gpt2")
-#tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
 
 def cal_ppl_score(text):
@@ -38,7 +38,7 @@ def cal_ppl_score_1(text):
     from tqdm import tqdm
 
     for begin_loc in tqdm(range(0, seq_len, stride)):
-        print(f'begin_loc:{begin_loc}')
+        #print(f'begin_loc:{begin_loc}')
         end_loc = min(begin_loc + max_length, seq_len)
         trg_len = end_loc - prev_end_loc  # may be different from stride on last loop
         input_ids = encodings.input_ids[:, begin_loc:end_loc].to(device)
@@ -65,6 +65,7 @@ def cal_ppl_score_1(text):
             break
 
     avg_nll = nll_sum / n_tokens  # average negative log-likelihood per token
-    print('start torch exp.')
+    #print('start torch exp.')
     ppl = torch.exp(avg_nll)
-    print(f'ppl:{ppl}')
+    #print(f'ppl:{ppl}')
+    return ppl

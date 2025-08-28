@@ -119,8 +119,7 @@ def search_text_list():
 
     for abstract in abstract_list:
         results = milvus_db_manage.search_data(abstract)
-        #print(f'results:{results}')
-        distance = round(float(results[0][0].distance),4)
+        distance = round(float(results[0][0].distance), 4)
         norm_distance = 1 - distance/2
         print(f"Distance: {distance:.4f}, norm distance:{norm_distance:.4f}")
 
